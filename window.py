@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[5]:
+# In[ ]:
 
 
 from tkinter import *
@@ -87,7 +87,10 @@ def carimbar():
         entry2.delete("1.0", END)  # Apaga a área de texto
         entry2.insert(END,'Carimbando arquivos...')
         entry2.update()
-        arquivo_carimbado = stamp('Arquivos_mesclados.pdf', 'CARIMBO.pdf', 'Arquivo_carimbado.pdf')
+        if checkbox_var.get():
+            arquivo_carimbado = stamp('Arquivos_mesclados.pdf', 'CARIMBO_RESERVADO.pdf', 'Arquivo_carimbado.pdf')
+        else:
+            arquivo_carimbado = stamp('Arquivos_mesclados.pdf', 'CARIMBO.pdf', 'Arquivo_carimbado.pdf')
         # Adiciona páginas em branco
         entry2.delete("1.0", END)  # Apaga a área de texto
         entry2.insert(END,'Adicinando carimbo "em branco"...')
@@ -129,6 +132,11 @@ window.geometry("750x420")
 window.configure(bg = "#ffffff")
 canvas = Canvas(window, bg = "#ffffff", height = 420, width = 750, bd = 0, highlightthickness = 0, relief = "ridge")
 canvas.place(x = 0, y = 0)
+
+# Adicionando Checkbox
+checkbox_var = IntVar()
+checkbox = Checkbutton(window, bg="#ffffff", text="Inserir carimbo de documento reservado", variable=checkbox_var)
+checkbox.place(x=57, y=315)
 
 background_img = PhotoImage(file = f"background.png")
 background = canvas.create_image(375.0, 211.0, image=background_img)
