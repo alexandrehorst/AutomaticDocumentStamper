@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 from tkinter import *
@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Union, Literal, List
 from PyPDF2 import PdfWriter, PdfReader, PdfMerger
 import glob, os, fitz
-import sys
+import sys, shutil
 
 
 def btn_clicked():
@@ -41,7 +41,7 @@ def abrir_janela_sobre():
 
     # Adiciona texto à caixa de texto
     texto = """
-    Versão 1.0
+    Versão 2.0
     Este programa permite que a partir de um conjunto de arquivos em formato PDF seja gerado um arquivo PDF final
     contendo todas as folhas carimbadas frente e verso e numeradas, caso o usuário deseje. O programa insere 
     carimbo na parte frontal de cada página, numera as  páginas, se desejado, e insere carimbo "em branco" no 
@@ -58,9 +58,10 @@ def abrir_janela_sobre():
     (Ex: 1.DIEx nr xyz, 2.Ofício nr abc, 3.Parecer técnico nr 2, 4. BI nr 234 etc)
     3- Clicar  em "Clique aqui para selecionar" e escolha o diretório que contenha os arquivos a serem carimbados.
     4- Se desejar numerá-los, inserir o número da primeira página no campo "Página inicial para numeração".
-    5- Clique em "Carimbar".
-    6- Serão gerados 2 arquivos em pdf na mesma pasta onde se encontra o arquivo executável.
-    7- Clique em fechar para encerrar o programa.
+    5- Selecionar se deseja adicionar o carimbo vermelho de "Acesso Restrito".
+    6- Clique em "Carimbar".
+    7- Serão gerados 2 arquivos em pdf no diretório selecionado no item 1.
+    8- Clique em fechar para encerrar o programa.
     
     Para informar bugs ou retirar dúvidas, envie um e-mal para horstmann.alexandre@eb.mil.br
     """        
@@ -117,7 +118,9 @@ def carimbar():
     else:
         entry2.insert(END,'Operação não realizada. É necessário selecionar um diretório!')
         entry2.update()
-
+    # Recorta e cola o arquivo gerado para o diretório selecionado
+    shutil.move('Arquivo_pronto.pdf', diretorio_selecionado + "/Arquivo_pronto.pdf")
+    shutil.move('Arquivo_sem_numeracao.pdf', diretorio_selecionado + "/Arquivo_sem_numeracao.pdf")   
 
 # Salva a saída padrão e a saída de erro em arquivos
 original_stdout = sys.stdout
@@ -135,7 +138,7 @@ canvas.place(x = 0, y = 0)
 
 # Adicionando Checkbox
 checkbox_var = IntVar()
-checkbox = Checkbutton(window, bg="#ffffff", text="Inserir carimbo de documento reservado", variable=checkbox_var)
+checkbox = Checkbutton(window, bg="#b0e0e6", text="Inserir carimbo de documento reservado", variable=checkbox_var)
 checkbox.place(x=57, y=315)
 
 background_img = PhotoImage(file = f"background.png")
@@ -188,22 +191,4 @@ sys.stdout.close()
 sys.stderr.close()
 sys.stdout = original_stdout
 sys.stderr = original_stderr
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
 
