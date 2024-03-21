@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[15]:
 
 
+import glob, os, fitz, pathlib
+import sys, shutil
 from tkinter import *
 from tkinter import filedialog
 from carimbador_automatico_refat import stamp, adicionar_pagina, mesclar_pdf, numerar_paginas
 from pathlib import Path
 from typing import Union, Literal, List
 from PyPDF2 import PdfWriter, PdfReader, PdfMerger
-import glob, os, fitz
-import sys, shutil
 
 
 def btn_clicked():
@@ -41,7 +41,7 @@ def abrir_janela_sobre():
 
     # Adiciona texto à caixa de texto
     texto = """
-    Versão 2.0
+    Versão 2.1
     Este programa permite que a partir de um conjunto de arquivos em formato PDF seja gerado um arquivo PDF final
     contendo todas as folhas carimbadas frente e verso e numeradas, caso o usuário deseje. O programa insere 
     carimbo na parte frontal de cada página, numera as  páginas, se desejado, e insere carimbo "em branco" no 
@@ -60,7 +60,7 @@ def abrir_janela_sobre():
     4- Se desejar numerá-los, inserir o número da primeira página no campo "Página inicial para numeração".
     5- Selecionar se deseja adicionar o carimbo vermelho de "Acesso Restrito".
     6- Clique em "Carimbar".
-    7- Serão gerados 2 arquivos em pdf no diretório selecionado no item 1.
+    7- Serão gerados 2 arquivos em pdf no desktop.
     8- Clique em fechar para encerrar o programa.
     
     Para informar bugs ou retirar dúvidas, envie um e-mal para horstmann.alexandre@eb.mil.br
@@ -118,9 +118,11 @@ def carimbar():
     else:
         entry2.insert(END,'Operação não realizada. É necessário selecionar um diretório!')
         entry2.update()
+    # Caminho do diretório do desktop do usuário
+    caminho_do_desktop = os.path.join(pathlib.Path.home(), 'Desktop')
     # Recorta e cola o arquivo gerado para o diretório selecionado
-    shutil.move('Arquivo_pronto.pdf', diretorio_selecionado + "/Arquivo_pronto.pdf")
-    shutil.move('Arquivo_sem_numeracao.pdf', diretorio_selecionado + "/Arquivo_sem_numeracao.pdf")   
+    shutil.move('Arquivo_pronto.pdf', caminho_do_desktop + "/Arquivo_pronto.pdf")
+    shutil.move('Arquivo_sem_numeracao.pdf', caminho_do_desktop + "/Arquivo_sem_numeracao.pdf")   
 
 # Salva a saída padrão e a saída de erro em arquivos
 original_stdout = sys.stdout
@@ -191,4 +193,10 @@ sys.stdout.close()
 sys.stderr.close()
 sys.stdout = original_stdout
 sys.stderr = original_stderr
+
+
+# In[ ]:
+
+
+
 
