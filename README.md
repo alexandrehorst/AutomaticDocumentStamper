@@ -24,13 +24,15 @@ To number the pages, the user just needs to fill in the "initial page for number
 The user interface (GUI) (window.png) was developed using Proxlight Designer, creating a project from which a set of images (contained in the GUI images directory) and a .py file are generated using Figma (a development interface based on the Tkinter module).
 
 ## ⚓: Dependências/ Dependencies
-Este código foi desenvolvido utilizando o Jupyter 6.4.12 e o Python versão 3.9.11. Além disso, o código possui as seguintes dependências: 
-* PyPDF2==3.0.1; e
-* PyMuPDF==1.23.6
+Este código foi desenvolvido utilizando o Jupyter 6.4.12 e o Python versão 3.9.13. Além disso, o código possui as seguintes dependências: 
+* PyPDF2==3.0.1; 
+* PyMuPDF==1.24.5; e
+* typing_extensions==4.12.2. 
 
-This code was developed using Jupyter 6.4.12 e o Python version 3.9.11. Additionally, the code has the following dependencies:
-* PyPDF2==3.0.1; and
-* PyMuPDF==1.23.6
+This code was developed using Jupyter 6.4.12 e o Python version 3.9.13. Additionally, the code has the following dependencies:
+* PyPDF2==3.0.1; 
+* PyMuPDF==1.24.5; and
+* typing_extensions==4.12.2. 
 
 ## :books: Funcionalidades/ Features
 * Carimba todas as folhas frente e verso;
@@ -51,25 +53,25 @@ This code was developed using Jupyter 6.4.12 e o Python version 3.9.11. Addition
 Antes de rodar o código é importante colocar todos os arquivos que precisam ser carimbados num único diretório e ordená-los (basta inserir um número inicial no nome de cada arquivo. Ex: 1.arquivo1, 2.arquivo2, 3.arquivo3 etc)
 
 Para rodar o código é necessário o seguinte (usando o prompt do anaconda):
-1) Criar o Ambiente virtual num determinado diretório: conda create -n <venv_name> python=3.9.11
+1) Criar o Ambiente virtual num determinado diretório: conda create -n <venv_name> python=3.9.13
 2) Ativar o ambiente virtual: conda activate <venv_name>
-3) Verificar se está tudo ok: python --version (deve ser mostrado a mensagem: Python 3.9.11)
+3) Verificar se está tudo ok: python --version (deve ser mostrado a mensagem: Python 3.9.13)
 4) Usando o prompt, buscar o diretório onde se encontram os arquivos do código.
-5) Instalar as dependências usando o comando: pip install PyPDF2==3.0.1 PyMuPDF==1.23.6
+5) Instalar as dependências usando o comando: pip install PyPDF2==3.0.1 PyMuPDF==1.24.5 typing_extensions==4.12.2
 6) Executar o código: python "window.py"
 
 Before running the code, it's important to place all the files that need to be stamped in a single directory and arrange them (simply insert an initial number in the name of each file. Example: 1.file1, 2.file2, 3.file3, etc.).
 
 To run the code, the following steps are necessary (using the Anaconda prompt):
 
-1) Create the virtual environment in a specific directory: conda create -n <venv_name> python=3.9.11
+1) Create the virtual environment in a specific directory: conda create -n <venv_name> python=3.9.13
 2) Activate the virtual environment: conda activate <venv_name>
-3) Verify everything is okay: python --version (it should display the message: Python 3.9.11)
+3) Verify everything is okay: python --version (it should display the message: Python 3.9.13)
 4) Using the prompt, navigate to the directory where the code files are located.
-5) Install dependencies using the command: pip install PyPDF2==3.0.1 PyMuPDF==1.23.6
+5) Install dependencies using the command: pip install PyPDF2==3.0.1 PyMuPDF==1.24.5 typing_extensions==4.12.2
 6) Execute the code: python "window.py"
 
 ## :dart: Status do projeto/ Project Status
-O projeto está finalizado.
+Deseja-se inserir assinatura digital numa próxima versão do programa.
 
-The project is done.   
+It is desired to add digital signatures in a future version of the program.   
