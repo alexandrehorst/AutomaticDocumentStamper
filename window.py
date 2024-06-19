@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[15]:
+# In[1]:
 
 
-import glob, os, fitz, pathlib
+import glob, os, fitz, pathlib, re
 import sys, shutil
 from tkinter import *
 from tkinter import filedialog
-from carimbador_automatico_refat import stamp, adicionar_pagina, mesclar_pdf, numerar_paginas
-from pathlib import Path
+from carimbador_automatico_refat import stamp, adicionar_pagina, mesclar_pdf, numerar_paginas, rotate_landscape_pages, ordenar_arquivos_por_numero, resize_to_a4
 from typing import Union, Literal, List
 from PyPDF2 import PdfWriter, PdfReader, PdfMerger
 
@@ -41,7 +40,7 @@ def abrir_janela_sobre():
 
     # Adiciona texto à caixa de texto
     texto = """
-    Versão 2.1
+    Versão 2.2
     Este programa permite que a partir de um conjunto de arquivos em formato PDF seja gerado um arquivo PDF final
     contendo todas as folhas carimbadas frente e verso e numeradas, caso o usuário deseje. O programa insere 
     carimbo na parte frontal de cada página, numera as  páginas, se desejado, e insere carimbo "em branco" no 
@@ -55,7 +54,7 @@ def abrir_janela_sobre():
     Para gerar o documento carimbado e assinado siga os seguintes passos:
     1- Criar um diretório apenas com os documentos em pdf que se deseja carimbar. 
     2- Ordenar os arquivos do diretório inserindo uma numeração no nome deles 
-    (Ex: 1.DIEx nr xyz, 2.Ofício nr abc, 3.Parecer técnico nr 2, 4. BI nr 234 etc)
+    (Ex: 1.DIEx nr xyz, 2.Ofício nr abc, 3.Parecer técnico nr 2, 4.BI nr 234 etc)
     3- Clicar  em "Clique aqui para selecionar" e escolha o diretório que contenha os arquivos a serem carimbados.
     4- Se desejar numerá-los, inserir o número da primeira página no campo "Página inicial para numeração".
     5- Selecionar se deseja adicionar o carimbo vermelho de "Acesso Restrito".
@@ -63,7 +62,7 @@ def abrir_janela_sobre():
     7- Serão gerados 2 arquivos em pdf no desktop.
     8- Clique em fechar para encerrar o programa.
     
-    Para informar bugs ou retirar dúvidas, envie um e-mal para horstmann.alexandre@eb.mil.br
+    Para informar bugs ou retirar dúvidas, envie um e-mail para horstmann.alexandre@eb.mil.br
     """        
     
     label = Label(janela_sobre, text=texto, fg='black', bg='#b0e0e6', justify='left')
@@ -72,26 +71,43 @@ def abrir_janela_sobre():
     botao_fechar = Button(janela_sobre, text="Fechar", bg='#b0e0e6', command=janela_sobre.destroy)
     botao_fechar.grid(row=5, column=0, padx=10, pady=10, sticky="NSEW")
     
-    
+
+# Função para carimbar as páginas
 def carimbar():
     global diretorio_selecionado, entry0, entry1, entry2
     entry2.delete("1.0", END)  # Apaga a área de texto
     entry2.update()
-    # Obtem lista de todos os arquivos pdf no diretório
-    arquivos_pdf = glob.glob(diretorio_selecionado + "/*.pdf")
-    if diretorio_selecionado:
+    
+    # Obtem lista ordenada de todos os arquivos pdf no diretório
+    arquivos_pdf = ordenar_arquivos_por_numero(diretorio_selecionado)    
+    
+    if diretorio_selecionado:                               
         # Mescla os arquivos
         entry2.insert(END,'Mesclando arquivos...')
         entry2.update()
-        mesclar_pdf(arquivos_pdf)
+        mesclar_pdf(arquivos_pdf)                     
+        
+        # Coloca todas as folhas em tamanho A4:
+        entry2.delete("1.0", END)  # Apaga a área de texto
+        entry2.insert(END,'Redimensionando páginas...')
+        entry2.update()
+        resize_to_a4('Arquivos_mesclados.pdf', 'Arquivos_mesclados_a4.pdf')
+                       
+        # Coloca as folhas em modo paisagem em modo retrato:
+        entry2.delete("1.0", END)  # Apaga a área de texto
+        entry2.insert(END,'Colocando todas as páginas em modo retrato...')
+        entry2.update()
+        rotate_landscape_pages('Arquivos_mesclados_a4.pdf', 'Arquivos_retrato.pdf')
+            
         # Carimba os arquivos
         entry2.delete("1.0", END)  # Apaga a área de texto
         entry2.insert(END,'Carimbando arquivos...')
         entry2.update()
         if checkbox_var.get():
-            arquivo_carimbado = stamp('Arquivos_mesclados.pdf', 'CARIMBO_RESERVADO.pdf', 'Arquivo_carimbado.pdf')
+            arquivo_carimbado = stamp('Arquivos_retrato.pdf', 'CARIMBO_RESERVADO.pdf', 'CARIMBO_90_RESERVADO.pdf', 'Arquivo_carimbado.pdf')
         else:
-            arquivo_carimbado = stamp('Arquivos_mesclados.pdf', 'CARIMBO.pdf', 'Arquivo_carimbado.pdf')
+            arquivo_carimbado = stamp('Arquivos_retrato.pdf', 'CARIMBO.pdf', 'CARIMBO_90.pdf', 'Arquivo_carimbado.pdf')
+        
         # Adiciona páginas em branco
         entry2.delete("1.0", END)  # Apaga a área de texto
         entry2.insert(END,'Adicinando carimbo "em branco"...')
@@ -103,10 +119,13 @@ def carimbar():
             entry2.insert(END,'Numerando páginas...')
             entry2.update()
             numerar_paginas('Arquivo_sem_numeracao.pdf', int(entry0.get()))
+        
         # Deleta arquivos desnecessários
         try:
-            os.remove('Arquivos_mesclados.pdf')
-            print("Arquivo deletado com sucesso!")
+            os.remove('Arquivos_mesclados.pdf')            
+            os.remove('Arquivos_mesclados_a4.pdf')
+            os.remove('Arquivos_retrato.pdf')
+            print("Arquivos deletados com sucesso!")                       
         except FileNotFoundError:
             print("O arquivo não foi encontrado.")
         except PermissionError:
@@ -193,10 +212,3 @@ sys.stdout.close()
 sys.stderr.close()
 sys.stdout = original_stdout
 sys.stderr = original_stderr
-
-
-# In[ ]:
-
-
-
-
